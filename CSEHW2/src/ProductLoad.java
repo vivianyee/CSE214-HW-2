@@ -15,7 +15,6 @@ public class ProductLoad {
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -23,7 +22,6 @@ public class ProductLoad {
 	public double getWeight() {
 		return weight;
 	}
-
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
@@ -31,7 +29,6 @@ public class ProductLoad {
 	public double getValue() {
 		return value;
 	}
-
 	public void setValue(double value) {
 		this.value = value;
 	}
@@ -39,7 +36,6 @@ public class ProductLoad {
 	public boolean isDangerous() {
 		return dangerous;
 	}
-
 	public void setDangerous(boolean dangerous) {
 		this.dangerous = dangerous;
 	}
