@@ -71,16 +71,21 @@ public class TrainManager {
 		}else {
 			System.out.println("Car successully unlinked. The "
 					+ "following load has been removed from the train:");
-			ProductLoad x = choo.removeCursor().getReference();
+			TrainCar x = choo.removeCursor();
+			ProductLoad y = x.getReference();
 			String danger = "";
-			if(x.isDangerous()) {
-				danger = "YES";
+			if(!x.isEmpty()) {
+				if(y.isDangerous()) {
+					danger = "YES";
+				}else {
+					danger = "NO";
+				}
+				System.out.println("        Name      Weight (t)     Value ($)   Dangerous\r\n" + 
+						"    ===================================================");
+				System.out.println(" "+y.getName()+" "+y.getWeight()+" "+y.getValue()+danger);
 			}else {
-				danger = "NO";
+				System.out.println("Removed empty car.");
 			}
-			System.out.println("        Name      Weight (t)     Value ($)   Dangerous\r\n" + 
-					"    ===================================================");
-			System.out.println(" "+x.getName()+" "+x.getWeight()+" "+x.getValue()+danger);
 		}
 		input();
 	}
@@ -88,7 +93,7 @@ public class TrainManager {
 	private static void setLoad() {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
-		}else {
+		}else if(choo.getCursorData().getReference()==null){
 			Scanner scan5 = new Scanner(System.in);
 			System.out.println("Enter produce name: ");
 			String name = scan5.nextLine();
@@ -107,6 +112,8 @@ public class TrainManager {
 			choo.setProduct(x);
 			System.out.println(pweight + " tons of " + name + " added to "
 					+ "the current car.");
+		}else {
+			System.out.println("Car already contains load.");
 		}
 		input();
 	}
@@ -116,6 +123,7 @@ public class TrainManager {
 			System.out.println("\nNo car in train.");
 		}else {
 			Scanner scan6 = new Scanner(System.in);
+			System.out.println("Load name: ");
 			String x = scan6.nextLine();
 			choo.findProduct(x);
 		}
@@ -163,12 +171,6 @@ public class TrainManager {
 				"D - Remove Dangerous Cars \r\n" + 
 				"Q - Quit \r\n");
 		System.out.println("Choose a selection: ");
-		System.out.println("    CAR:                               LOAD:\r\n" + 
-				"      Num   Length (m)    Weight (t)  |    "
-				+ "Name      Weight (t)     Value ($)   Dangerous\r\n" + 
-				"    ==================================+========"
-				+ "===========================================");
-		System.out.printf("%-11s %-13s %-11s %-4s %-9s %-10s %7s %11s %n","      1",100,10,"|","corn",100,100,"YES");
 	}
 
 }

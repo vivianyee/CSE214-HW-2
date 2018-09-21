@@ -10,13 +10,12 @@ public class TrainCarNode {
 
 	public String toString() {
 		String x = "";
-		if(car.getReference()!=null) {
-			x= car.getReference().getName();
+		if(car.getReference().isDangerous()) {
+			x = "YES";
 		}else {
-			x = "     No load in car";
+			x = "NO";
 		}
-		return("      "+car.getTrainLength() 
-					+ "    " + car.getTrainWeight() + x);
+		return(x);
 	}
 	
 	public TrainCarNode getPrev() {

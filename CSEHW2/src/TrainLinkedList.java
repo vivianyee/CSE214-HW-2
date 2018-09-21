@@ -25,6 +25,7 @@ public class TrainLinkedList {
 			System.out.print("No next car, cannot move cursor forward.");
 		}else {
 			cursor = cursor.getNext();
+			System.out.print("Cursor moved forward.");
 		}
 	}
 	
@@ -33,6 +34,7 @@ public class TrainLinkedList {
 			System.out.print("No previous car, cannot move cursor backward.");
 		}else {
 			cursor = cursor.getPrev();
+			System.out.print("Cursor moved backward.");
 		}
 	}
 	
@@ -42,20 +44,31 @@ public class TrainLinkedList {
 			head = node;
 			tail = node;
 			cursor = node;
+		}else if(cursor.equals(tail)){
+			node.setNext(cursor.getNext());
+			node.setPrev(cursor);
+			cursor.setNext(node);
+			cursor = cursor.getNext();
+			tail = tail.getNext();
+			//node.getNext().setPrev(node);
 		}else {
 			node.setNext(cursor.getNext());
 			node.setPrev(cursor);
 			cursor.setNext(node);
 			cursor = cursor.getNext();
-			//node.getNext().setPrev(node);
-			tail = tail.getNext();
 		}
 		size++;
 	}
 	
 	public TrainCar removeCursor() {
 		TrainCar x = getCursorData();
-		if(cursor.equals(tail)) {
+		if((cursor.equals(tail))&&(cursor.equals(head))){
+			cursor.setCar(null);
+			head = null;
+			tail = null;
+			cursor = null;
+			return x;
+		}else if(cursor.equals(tail)) {
 			cursor.getPrev().setNext(null);
 			cursor = cursor.getPrev();
 			tail = tail.getPrev();
@@ -63,6 +76,7 @@ public class TrainLinkedList {
 			return x;
 		}else if(cursor.equals(head)) {
 			cursor.getNext().setPrev(null);
+			cursor = cursor.getNext();
 			head = head.getNext();
 			size--;
 			return x;
@@ -70,6 +84,7 @@ public class TrainLinkedList {
 			cursor.getPrev().setNext(cursor.getNext());
 			cursor.getNext().setPrev(cursor.getPrev());
 			cursor = cursor.getNext();
+			System.out.println("normal");
 			size--;
 			return x;
 		}
@@ -169,16 +184,33 @@ public class TrainLinkedList {
 		}
 	}
 	
-	public void printManifest() {
+//	System.out.print("      ");
+//	System.out.printf("%-5s %-13s %-11s %-4s %-9s %-14s %-8s %4s %n",1,1,1,11,1,1,1,1);
+	public void printManifest() { 
 		int count = 0;
 		TrainCarNode node = head;
 		while (node != null) {
 			count++;
 			if(cursor.getCar().equals(node.getCar())) {
-				System.out.print("-->");
+				System.out.print("-->   ");
+			}else {
+				System.out.print("      ");
 			}
-			System.out.print("      "+count + node.toString());
-			System.out.print("\n");
+			if(head.getCar().equals(node.getCar())) {
+				System.out.print("h   ");
+			}
+			if(tail.getCar().equals(node.getCar())) {
+				System.out.print("t   ");
+			}
+			TrainCar x = node.getCar();
+			if(!node.getCar().isEmpty()) {
+				System.out.printf("%-5s %-13s %-11s %-4s %-9s %-14s %-9s %4s %n",count,x.getTrainLength(),
+						x.getTrainWeight(),"|",x.getReference().getName(),x.getReference().getWeight(),
+						x.getReference().getValue(),node.toString());
+			}else {
+				System.out.printf("%-5s %-13s %-11s %-4s %-9s %-14s %-10s %4s %n",count,x.getTrainLength(),
+						x.getTrainWeight(),"|","Empty",0.0,0.00,"NO");
+			}
 			node = node.getNext();
 		}
 	}
@@ -189,10 +221,23 @@ public class TrainLinkedList {
 			while(node != null) {
 				if(!node.getCar().isEmpty()) {
 					if(node.getCar().getReference().isDangerous()) {
-						if(node.equals(tail)) {
-							cursor.getPrev().setNext(null);
-							cursor = cursor.getPrev();
+						if((cursor.equals(tail))&&(cursor.equals(head))){
+							node.setCar(null);
+							head = null;
+							tail = null;
+							cursor = null;
+						}else if(node.equals(tail)) {
+							node.getPrev().setNext(null);
+							if(cursor.equals(tail)) {
+								cursor = cursor.getPrev();
+							}
 							tail = tail.getPrev();
+						}else if(node.equals(head)){
+							node.getNext().setPrev(null);
+							if(cursor.equals(head)) {
+								cursor = cursor.getNext();
+							}
+							head = head.getNext();
 						}else {
 							node.getPrev().setNext(node.getNext());
 							node.getNext().setPrev(node.getPrev());
@@ -202,6 +247,8 @@ public class TrainLinkedList {
 				node = node.getNext();
 			}
 		}
+		dangerous = false;
+		size--;
 	}
 	
 	public boolean cursorNull() {
