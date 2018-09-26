@@ -1,13 +1,32 @@
 import java.util.Scanner;
 
+/**
+ * The <code>TrainManager</code> class creates a manager for the 
+ * user to input letters so that they can create the linked list
+ * 
+ * @author Vivian Yee
+ * 		e-mail: vivian.yee@stonybrook.edu
+ * 		Stonybrook ID: 112145534
+ */
 public class TrainManager {
-	static TrainLinkedList choo = new TrainLinkedList();
+	static TrainLinkedList choo = new TrainLinkedList(); // Train linked list
 	
-	public static void main(String[] args) {
+	/**
+	 * Goes to <code>input<code>
+	 * 
+	 * @param args
+	 * @throws IllegalElementException
+	 */
+	public static void main(String[] args) throws IllegalElementException {
 		input();
 	}
 	
-	public static void input() {
+	/**
+	 * Gets a case for every letter the user enters in
+	 * 
+	 * @throws IllegalElementException
+	 */
+	public static void input() throws IllegalElementException {
 		menu();
 		Scanner scan= new Scanner(System.in);
 		String x = scan.nextLine();
@@ -36,40 +55,70 @@ public class TrainManager {
 			goBack();
 		}
 	}
-	
-	public static void goBack() {
-		System.out.println("Please choose a selection from the menu.");
+	/**
+	 * If user inputs a letter that is not in the selection, they go back
+	 * 
+	 * @throws IllegalElementException
+	 */
+	public static void goBack() throws IllegalElementException {
+		System.out.println("\nPlease choose a selection from the menu.");
 		input();
 	}
 	
-	private static void cursorForward() {
+	/**
+	 * Moves cursor forward
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void cursorForward() throws IllegalElementException {
 		choo.cursorForward();
 		input();
 	}
 
-	private static void cursorBackward() {
+	/**
+	 * Moves cursor backward
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void cursorBackward() throws IllegalElementException {
 		choo.cursorBackward();
 		input();
 	}
 
-	private static void insertAfterCursor() {
+	/**
+	 * Inserts a car after cursor
+	 * 
+	 * <dt>Postcondition:
+	 * 		Inserts a car after the cursor
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void insertAfterCursor() throws IllegalElementException {
 		Scanner scan3 = new Scanner(System.in);
 		System.out.println("Enter car length in meters: "); 
-		int clength = scan3.nextInt();
+			double clength = scan3.nextDouble();
 		System.out.println("Enter car weight in tons: ");
-		int cweight = scan3.nextInt();
+		double cweight = scan3.nextDouble();
 		TrainCar x = new TrainCar(clength,cweight);
 		choo.insertAfterCursor(x);
-		System.out.println("New train car " + clength + " meters " + cweight
+		System.out.println("\nNew train car " + clength + " meters " + cweight
 				+" tons inserted into train.");
 		input();
 	}
 
-	private static void removeAtCursor() {
+	/**
+	 * Removes the car at the cursor
+	 * 
+	 * <dt>Postcondition:
+	 * 		The car at the cursor is removed
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void removeAtCursor() throws IllegalElementException {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
 		}else {
-			System.out.println("Car successully unlinked. The "
+			System.out.println("\nCar successully unlinked. The "
 					+ "following load has been removed from the train:");
 			TrainCar x = choo.removeCursor();
 			ProductLoad y = x.getReference();
@@ -80,9 +129,10 @@ public class TrainManager {
 				}else {
 					danger = "NO";
 				}
-				System.out.println("        Name      Weight (t)     Value ($)   Dangerous\r\n" + 
+				System.out.println("\n        Name      Weight (t)     Value ($)   Dangerous\r\n" + 
 						"    ===================================================");
-				System.out.println(" "+y.getName()+" "+y.getWeight()+" "+y.getValue()+danger);
+				System.out.print("        ");
+				System.out.printf("%-9s %-14s %-10s %4s %n",y.getName(),y.getWeight(),y.getValue(),danger);
 			}else {
 				System.out.println("Removed empty car.");
 			}
@@ -90,7 +140,17 @@ public class TrainManager {
 		input();
 	}
 
-	private static void setLoad() {
+	/**
+	 * Sets the load the user provides to the cursor
+	 * 
+	 * <dt>Precondition:
+	 * 		Value must be below the hundredth place
+	 * <dt>Postcondition:
+	 * 		Load is set inside cursor
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void setLoad() throws IllegalElementException {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
 		}else if(choo.getCursorData().getReference()==null){
@@ -107,39 +167,67 @@ public class TrainManager {
 			boolean pdangerous = false;
 			if(pdang.equalsIgnoreCase("Y")) {
 				pdangerous = true;
+			}else if(pdang.equalsIgnoreCase("N")){
+				pdangerous = false;
+			}else {
+				System.out.println("Invalid selection.");
+				input();
 			}
-			ProductLoad x = new ProductLoad(name,pweight,pvalue,pdangerous);
-			choo.setProduct(x);
-			System.out.println(pweight + " tons of " + name + " added to "
-					+ "the current car.");
+			try {
+				ProductLoad x = new ProductLoad(name,pweight,pvalue,pdangerous);
+				choo.setProduct(x);
+				System.out.println("\n"+pweight + " tons of " + name + " added to "
+						+ "the current car.");
+			} catch (IllegalElementException e) {
+				System.out.println(e);
+			}
 		}else {
-			System.out.println("Car already contains load.");
+			System.out.println("\nCar already contains load.");
 		}
 		input();
 	}
 
-	private static void searchName() {
+	/**
+	 * Searches the name that the user wants to look for
+	 * 
+	 * <dt>Postcondition:
+	 * 		Prints the total value,weight of the load and the dangers
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void searchName() throws IllegalElementException {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
 		}else {
 			Scanner scan6 = new Scanner(System.in);
-			System.out.println("Load name: ");
+			System.out.println("\nLoad name: ");
 			String x = scan6.nextLine();
 			choo.findProduct(x);
 		}
 		input();
 	}
 
-	private static void printTrain() {
+	/**
+	 * Prints the number of trains, total length, weight, value and 
+	 * whether the car has dangerous loads or not
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void printTrain() throws IllegalElementException {
 		System.out.println(choo.toString());
 		input();
 	}
 
-	private static void printManifest() {
+	/**
+	 * Prints the manifest of the train
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void printManifest() throws IllegalElementException {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
 		}else {
-			System.out.println("    CAR:                               LOAD:\r\n" + 
+			System.out.println("\n    CAR:                               LOAD:\r\n" + 
 					"      Num   Length (m)    Weight (t)  |    "
 					+ "Name      Weight (t)     Value ($)   Dangerous\r\n" + 
 					"    ==================================+========"
@@ -149,16 +237,24 @@ public class TrainManager {
 		input();
 	}
 
-	private static void removeDangerous() {
+	/**
+	 * Removes dangerous cars in the train
+	 * 
+	 * @throws IllegalElementException
+	 */
+	private static void removeDangerous() throws IllegalElementException {
 		if(choo.cursorNull()) {
 			System.out.println("\nNo car in train.");
 		}else {
 			choo.removeDangerousCars();
-			System.out.println("Dangerous cars successfully removed from the train.");
+			System.out.println("\nDangerous cars successfully removed from the train.");
 		}
 		input();
 	}
 
+	/**
+	 * Prints out menu
+	 */
 	public static void menu() {
 		System.out.println("\n\nF - Move Cursor Forward \r\n" +  
 				"B - Move Cursor Backward \r\n" + 
@@ -171,6 +267,7 @@ public class TrainManager {
 				"D - Remove Dangerous Cars \r\n" + 
 				"Q - Quit \r\n");
 		System.out.println("Choose a selection: ");
+		
 	}
 
 }
